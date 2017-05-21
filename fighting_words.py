@@ -25,8 +25,8 @@ def bayes_compare_language(l1, l2, ngram = 1, prior=.01, cv = None):
     Returns:
     - A list of length |Vocab| where each entry is a (n-gram, zscore) tuple.'''
     if cv is None and type(prior) is not float:
-        print "If using a non-uniform prior:"
-        print "Please also pass a count vectorizer with the vocabulary parameter set."
+        print("If using a non-uniform prior:")
+        print("Please also pass a count vectorizer with the vocabulary parameter set.")
         quit()
     l1 = [basic_sanitize(l) for l in l1]
     l2 = [basic_sanitize(l) for l in l2]
@@ -37,7 +37,7 @@ def bayes_compare_language(l1, l2, ngram = 1, prior=.01, cv = None):
     counts_mat = cv.fit_transform(l1+l2).toarray()
     # Now sum over languages...
     vocab_size = len(cv.vocabulary_)
-    print "Vocab size is {}".format(vocab_size)
+    print("Vocab size is {}".format(vocab_size))
     if type(prior) is float:
         priors = np.array([prior for i in range(vocab_size)])
     else:
@@ -49,7 +49,7 @@ def bayes_compare_language(l1, l2, ngram = 1, prior=.01, cv = None):
     a0 = np.sum(priors)
     n1 = 1.*np.sum(count_matrix[0,:])
     n2 = 1.*np.sum(count_matrix[1,:])
-    print "Comparing language..."
+    print("Comparing language...")
     for i in range(vocab_size):
         #compute delta
         term1 = np.log((count_matrix[0,i] + priors[i])/(n1 + a0 - count_matrix[0,i] - priors[i]))
@@ -59,7 +59,7 @@ def bayes_compare_language(l1, l2, ngram = 1, prior=.01, cv = None):
         var = 1./(count_matrix[0,i] + priors[i]) + 1./(count_matrix[1,i] + priors[i])
         #store final score
         z_scores[i] = delta/np.sqrt(var)
-    index_to_term = {v:k for k,v in cv.vocabulary_.iteritems()}
+    index_to_term = {v:k for k,v in cv.vocabulary_.items()}
     sorted_indices = np.argsort(z_scores)
     return_list = []
     for i in sorted_indices:
